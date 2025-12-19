@@ -62,15 +62,21 @@ const SetupScreen = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => onImpostorChange(Math.max(1, impostorCount - 1))}
-                className="w-8 h-8 rounded-full bg-destructive/80 flex items-center justify-center hover:bg-destructive transition-colors"
+                className="w-8 h-8 rounded-full bg-destructive/80 flex items-center justify-center hover:bg-destructive transition-colors disabled:opacity-50"
                 disabled={impostorCount <= 1}
               >
                 <Minus className="w-4 h-4 text-destructive-foreground" />
               </button>
               <span className="text-foreground font-medium w-4 text-center">{impostorCount}</span>
               <button
-                onClick={() => onImpostorChange(impostorCount + 1)}
-                className="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors"
+                onClick={() => {
+                  const maxImpostors = Math.max(1, players.length - 1);
+                  if (impostorCount < maxImpostors) {
+                    onImpostorChange(impostorCount + 1);
+                  }
+                }}
+                className="w-8 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-primary/90 transition-colors disabled:opacity-50"
+                disabled={impostorCount >= Math.max(1, players.length - 1)}
               >
                 <Plus className="w-4 h-4 text-primary-foreground" />
               </button>
@@ -126,9 +132,11 @@ const SetupScreen = ({
         >
           Iniciar Jogo
         </button>
-        {!canStart && players.length < 3 && (
+        {!canStart && (
           <p className="text-center text-muted-foreground text-sm mt-2">
-            Mínimo de 3 jogadores necessários
+            {players.length < 3 
+              ? 'Mínimo de 3 jogadores necessários' 
+              : 'Impostores devem ser menores que jogadores'}
           </p>
         )}
       </div>
