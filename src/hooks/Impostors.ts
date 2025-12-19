@@ -1,24 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function useImpostors() {
+// useImpostors.ts
+export function useImpostors(maxPlayers: number) {
+    const [impostors, setImpostors] = useState<number>(1);
 
-    const [countImpostors, setCountImpostors] = useState<number>(1);
+    useEffect(() => {
+        if (maxPlayers > 0 && impostors >= maxPlayers) {
+            setImpostors(Math.max(1, maxPlayers - 1));
+        }
+    }, [maxPlayers]);
 
     const incrementImpostors = () => {
-        setCountImpostors(prevCount => prevCount + 1)
+        setImpostors(prevCount => {
+            const newValue = prevCount + 1;
+            return newValue < maxPlayers ? newValue : prevCount;
+        });
     }
 
     const decrementImpostors = () => {
-        if (countImpostors > 0) {
-            setCountImpostors(prevCount => prevCount - 1)
-        }
+        setImpostors(prevCount => prevCount > 1 ? prevCount - 1 : prevCount);
     }
 
     return {
         incrementImpostors,
         decrementImpostors,
-        countImpostors
+        impostors
     }
 }
-
-export default useImpostors;

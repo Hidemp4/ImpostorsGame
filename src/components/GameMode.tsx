@@ -1,10 +1,13 @@
-import useImpostors from "@/hooks/Impostors";
+import { useImpostors } from "@/hooks/Impostors";
 import Players from "@/components/pages/Players";
 import { Button } from "@/components/ui/button";
+import { usePlayers } from "@/hooks/Players";
+import Themes from "./pages/Themes";
 
 const GameMode = () => {
 
-    const { incrementImpostors, decrementImpostors, countImpostors } = useImpostors();
+    const { players, loaded } = usePlayers();
+    const { incrementImpostors, decrementImpostors, impostors } = useImpostors(players.length);
 
     return (
         <>
@@ -18,7 +21,7 @@ const GameMode = () => {
 
                         <p className="text-white font-medium tracking-wide">Jogadores</p>
                     </div>
-                    
+
                     <Players />
                 </div>
 
@@ -34,7 +37,7 @@ const GameMode = () => {
                     <div className="flex items-center space-x-3">
                         <Button
                             onClick={decrementImpostors}
-                            disabled={countImpostors === 1}
+                            disabled={impostors === 1}
                             size="sm"
                             className="bg-transparent cursor-pointer flex items-center space-x-1 text-white hover:bg-transparent focus:ring-0"
                         >
@@ -43,11 +46,12 @@ const GameMode = () => {
                             </svg>
                         </Button>
 
-                        <span>{countImpostors}</span>
+                        <span>{impostors}</span>
 
                         <Button
                             onClick={incrementImpostors}
                             size="sm"
+                            disabled={!loaded || players.length < 2 || impostors >= players.length - 1}
                             className="bg-transparent cursor-pointer flex items-center space-x-1 text-white hover:bg-transparent focus:ring-0"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-4 bg-[#00d862] rounded-full text-black font-bold">
@@ -69,10 +73,8 @@ const GameMode = () => {
                         <p className="text-white font-medium tracking-wide">Temas</p>
                     </div>
                     <Button size="sm" className="bg-transparent flex items-center space-x-1 text-white hover:bg-transparent focus:ring-0">
-                        <span>(1) Clash Royale</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                        </svg>
+                        
+                        <Themes />
                     </Button>
                 </div>
 
