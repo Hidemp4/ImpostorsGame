@@ -82,6 +82,8 @@ const Index = () => {
     }
   };
 
+  const currentPlayer = players[currentPlayerIndex];
+
   return (
     <div className="min-h-screen bg-background">
       <AnimatePresence mode="wait">
@@ -97,15 +99,17 @@ const Index = () => {
           </motion.div>
         )}
 
-        {phase === 'reveal' && players[currentPlayerIndex] && (
+        {phase === 'reveal' && currentPlayer && (
           <motion.div
-            key={`reveal-${currentPlayerIndex}`}
+            key={`reveal-${currentPlayer.id}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="min-h-screen"
           >
             <RevealCard
-              player={players[currentPlayerIndex]}
+              key={currentPlayer.id}
+              player={currentPlayer}
               word={gameWord}
               currentIndex={currentPlayerIndex}
               totalPlayers={players.length}

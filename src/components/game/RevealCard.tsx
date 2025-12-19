@@ -20,6 +20,7 @@ const RevealCard = ({
   onNext
 }: RevealCardProps) => {
   const [isRevealed, setIsRevealed] = useState(false);
+  const [hasCalledNext, setHasCalledNext] = useState(false);
   const constraintsRef = useRef(null);
   const y = useMotionValue(0);
   
@@ -159,7 +160,7 @@ const RevealCard = ({
       </motion.div>
 
       {/* Next Button */}
-      {isRevealed && (
+      {isRevealed && !hasCalledNext && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,7 +168,8 @@ const RevealCard = ({
         >
           <button
             onClick={() => {
-              setIsRevealed(false);
+              if (hasCalledNext) return;
+              setHasCalledNext(true);
               onNext();
             }}
             className="w-full py-4 rounded-full btn-neon glow-neon font-bold text-lg"
